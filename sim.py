@@ -1,15 +1,11 @@
 import game
 import sys
 import player
-<<<<<<< HEAD
-
-=======
 from random import randrange
 import random
 import math
 
 #S is stand, H is hit, D is double, P is split, 
->>>>>>> d19f181612b474b68fc3e6f289a7a6407dcc86d3
 #with 0 ace off deal
 dealerUpCard_with17 = ["S" for i in range(10)]
 dealerUpCard_with13to16 = ["S" for i in range(5)] + ["H" for i in range(5)]
