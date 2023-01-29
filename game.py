@@ -1,5 +1,6 @@
 import player
 import dealer
+from random import randrange
 import random
 
 class Game:
@@ -42,6 +43,9 @@ class Game:
         for p in self.gamePlayers:
             p.newHand()
         self.gameDealer.newHand()   
+    def resetPlayerChips(self):
+        for p in self.gamePlayers:
+            p.resetChipStack()
     def shuffleDeck(self):
         random.shuffle(self.deck)
     def dealCard(self):
@@ -52,6 +56,16 @@ class Game:
         self.deck.pop(0)
         self.deckSize -= 1; 
         return cardDealt
+    def placePlayerBets(self, percentLow, playerBetSizeLow, playerBetSizeHigh):
+        for p in self.gamePlayers:
+            randDraw = random.randint(1,10)
+            betSize = 1
+            if randDraw <= percentLow:
+                betSize = playerBetSizeLow[randrange(len(playerBetSizeLow))]
+            else:
+                betSize = playerBetSizeHigh[randrange(len(playerBetSizeHigh))]
+            p.setBetSize(betSize)
+            p.reduceChips(p.betSize)
     def printPlayerChipSizes(self):
         for p in self.gamePlayers:
             p.printChipSize()

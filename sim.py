@@ -1,98 +1,40 @@
 import game
 import sys
 import player
-from random import randrange
-import random
 import math
+import random
+import strategy
 
-#S is stand, H is hit, D is double, P is split, 
-#with 0 ace off deal
-dealerUpCard_with17 = ["S" for i in range(10)]
-dealerUpCard_with13to16 = ["S" for i in range(5)] + ["H" for i in range(5)]
-dealerUpCard_with12 = ["H" for i in range(2)] + ["S" for i in range(3)] + ["H" for i in range(5)]
-dealerUpCard_with11 = ["D" for i in range(9)] + ["H"]
-dealerUpCard_with10 = ["D" for i in range(8)] + ["H" for i in range(2)]
-dealerUpCard_with9 = ["H"] + ["D" for i in range(4)] + ["H" for i in range(5)]
-dealerUpCard_with5to8 = ["H" for i in range(10)]
-
-# playerHardDeal = {
-#     17: dealerUpCard_with17,
-#     16: dealerUpCard_with13to16,
-#     12: dealerUpCard_with12,
-#     11: dealerUpCard_with11,
-#     10: dealerUpCard_with10,
-#     9: dealerUpCard_with9,
-#     8: dealerUpCard_with5to8
-# }
-standAll = ["S" for i in range(10)]
-hitAll = ["H" for i in range(10)]
-playerHardDeal = {
-    17: standAll,
-    16: standAll,
-    12: hitAll,
-    11: hitAll,
-    10: hitAll,
-    9: hitAll,
-    8: hitAll
-}
-
-#with 1 ace off deal
-dealerUpCard_with8to10 = ["S" for i in range(10)]
-dealerUpCard_with7 = ["S"] + ["D" for i in range(4)] + ["S" for i in range(2)] + ["H" for i in range(3)]
-dealerUpCard_with6 = ["H"] + ["D" for i in range(4)] + ["H" for i in range(5)]
-dealerUpCard_with4to5 = ["H" for i in range(2)] + ["D" for i in range(3)] + ["H" for i in range(5)]
-dealerUpCard_with2to3 = ["H" for i in range(3)] + ["D" for i in range(2)] + ["H" for i in range(5)]
-# playerSoftDeal = {
-#     8: dealerUpCard_with8to10,
-#     7: dealerUpCard_with7,
-#     6: dealerUpCard_with6,
-#     5: dealerUpCard_with4to5,
-#     3: dealerUpCard_with2to3,
-# }
-playerSoftDeal = {
-    8: standAll,
-    7: standAll,
-    6: standAll,
-    5: hitAll,
-    3: hitAll,
-}
-
-
-#dealer decision
-
+playerHardDeal = strategy.playerHardDeal_book
+playerSoftDeal = strategy.playerSoftDeal_book
 
 def main():
     numPlayers = 3
     totalPlayerArr = []
-    numWins = [0,0,0]
+    numWins = []
     for i in range(numPlayers):
         totalPlayerArr.append([])
+        numWins.append(0)
     playerChipSize = 100
-
-    percentLow = 8
-    playerBetSizeLow = [1,2,3]
+    percentLow = 9
+    playerBetSizeLow = [1,2]
     playerBetSizeHigh = [5,8]
-    numDecks = 1
+    numDecks = 3
     numberTurns = 100
     simulationSets = 100
     simGame = game.Game(numPlayers, numDecks, playerChipSize)
     for s in range(simulationSets):
-        for p in simGame.gamePlayers:
-            p.resetChipStack()
+        simGame.resetPlayerChips()
         for i in range(numberTurns):
-            simGame.resetBlackJackDeck()
+            #reset deck every turn
+            if(simGame.deckSize < (52*numDecks)):
+                simGame.resetBlackJackDeck()
             simGame.resetAllHands()
-            simGame.dealHand()
             #place bets
-            for p in simGame.gamePlayers:
-                randDraw = random.randint(1,10)
-                betSize = 2
-                if randDraw <= percentLow:
-                    betSize = playerBetSizeLow[randrange(len(playerBetSizeLow))]
-                else:
-                    betSize = playerBetSizeHigh[randrange(len(playerBetSizeHigh))]
-                p.setBetSize(betSize)
-                p.reduceChips(p.betSize)
+            simGame.placePlayerBets(percentLow, playerBetSizeLow, playerBetSizeHigh)
+            #deal hand
+            simGame.dealHand()
+            #take turns
             for p in simGame.gamePlayers:
                 decision = p.makeDecision(simGame.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
                 p.setPlayerDecision(decision)  
@@ -100,13 +42,12 @@ def main():
                     if(decision == "H"):
                         p.assignCard(simGame.dealCard())
                         p.calculateHandTotal()
-                    if decision == "D":
+                        decision = p.makeDecision(simGame.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
+                    elif decision == "D":
                         p.assignCard(simGame.dealCard())
                         p.calculateHandTotal()
                         p.setDidDouble()
-                    decision = p.makeDecision(simGame.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
-                if p.didDouble:
-                    p.reduceChips(p.betSize)
+                        p.reduceChips(p.betSize)
             #dealer decision
             simGame.gameDealer.calculateHandTotal()
             dealerDecision = simGame.gameDealer.makeDecision()
@@ -118,12 +59,21 @@ def main():
             #calculate win/loss
             for p in simGame.gamePlayers:
                 if not p.bust:
+                    #dealer bust
                     if(simGame.gameDealer.bust):
                         p.addChips(2*p.betSize)
+                    #player beat dealer
                     elif ((p.handTotal > simGame.gameDealer.handTotal) and simGame.gameDealer.handTotal != 21):
-                        p.addChips(2*p.betSize)
+                        if p.didDouble:
+                            p.addChips(4*p.betSize)
+                        else:
+                            p.addChips(2*p.betSize)
+                    #player push
                     elif (p.handTotal == simGame.gameDealer.handTotal):
-                        p.addChips(p.betSize)
+                        if p.didDouble:
+                            p.addChips(2*p.betSize)
+                        else:
+                            p.addChips(p.betSize)
             #print final output
         for x in range(numPlayers):
             totalPlayerArr[x].append(simGame.gamePlayers[x].chips)
