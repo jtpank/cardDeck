@@ -52,6 +52,9 @@ class Game:
         self.deck.pop(0)
         self.deckSize -= 1; 
         return cardDealt
+    def printPlayerChipSizes(self):
+        for p in self.gamePlayers:
+            p.printChipSize()
     def printDeck(self):
         print(' '.join(str(card) for card in self.deck))
     def printDeckSize(self):

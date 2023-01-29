@@ -2,6 +2,8 @@ class Player:
     def __init__(self, id, chips):
         self.id = id
         self.chips = chips
+        self.chipMax = chips
+        self.betSize = 0
         self.hand = []
         self.numAces = 0
         self.handTotal = 0
@@ -13,7 +15,10 @@ class Player:
         self.hand.append(card)
         if card == 1:
             self.numAces += 1
+    def resetChipStack(self):
+        self.chips = self.chipMax
     def newHand(self):
+        self.betSize = 0
         self.bust = False
         self.didDouble = False
         self.firstDecision = True
@@ -22,6 +27,12 @@ class Player:
         self.numAces = 0
         self.handTotal = 0
         self.initalDecision = "N"
+    def setBetSize(self, value):
+        self.betSize = value
+    def addChips(self, value):
+        self.chips += value
+    def reduceChips(self, value):
+        self.chips -= value
     def calculateHandTotal(self):
         self.handTotal = 0
         for card in self.hand:
@@ -40,9 +51,9 @@ class Player:
         if self.handTotal > 21:
             self.bust = True
     def showHandInfo(self):
-        print("Player " + str(self.id) + " hand: " + ' '.join(str(card) for card in self.hand) + " aces: " + str(self.numAces) + " Total: " + str(self.handTotal) + " Decision: " + self.decision)
-    def showChips(self):
-        print("Chip size: " + str(self.chips))
+        print("Player " + str(self.id) + " hand: " + ' '.join(str(card) for card in self.hand) + " aces: " + str(self.numAces) + " Total: " + str(self.handTotal) + " Decision: " + self.decision + " Chips: " + str(self.chips))
+    def printChipSize(self):
+        print("Player " + str(self.id) + " Chip size: " + str(self.chips))
     def printNumAces(self):
         print("num aces: " + str(self.numAces))
     def setDidDouble(self):
