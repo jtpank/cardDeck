@@ -5,6 +5,9 @@ from random import randrange
 import random
 import math
 
+#this is my Desktop branch
+
+
 #S is stand, H is hit, D is double, P is split, 
 #with 0 ace off deal
 dealerUpCard_with17 = ["S" for i in range(10)]
