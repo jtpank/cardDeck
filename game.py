@@ -66,6 +66,51 @@ class Game:
                 betSize = playerBetSizeHigh[randrange(len(playerBetSizeHigh))]
             p.setBetSize(betSize)
             p.reduceChips(p.betSize)
+    def takeTurns(self, playerSoftDeal, playerHardDeal):
+        #make player decisions
+        for p in self.gamePlayers:
+            decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
+            p.setPlayerDecision(decision)  
+            while(not p.bust and not p.didDouble and decision != "S"):
+                if(decision == "H"):
+                    #Player decides to HIT
+                    p.assignCard(self.dealCard())
+                    p.calculateHandTotal()
+                    decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
+                elif decision == "D":
+                    #player decides to double down
+                    p.assignCard(self.dealCard())
+                    p.calculateHandTotal()
+                    p.setDidDouble()
+                    p.reduceChips(p.betSize)
+        #next make dealer decision
+        self.gameDealer.calculateHandTotal()
+        dealerDecision = self.gameDealer.makeDecision()
+        while(not self.gameDealer.bust and dealerDecision != "S"):
+            if dealerDecision == "H":
+                self.gameDealer.assignCard(self.dealCard())
+                self.gameDealer.calculateHandTotal()
+            dealerDecision = self.gameDealer.makeDecision()
+        return
+    def calculateWinLoss(self):
+        for p in self.gamePlayers:
+            if not p.bust:
+                #dealer bust
+                if(self.gameDealer.bust):
+                    p.addChips(2*p.betSize)
+                #player beat dealer
+                elif ((p.handTotal > self.gameDealer.handTotal) and self.gameDealer.handTotal != 21):
+                    if p.didDouble:
+                        p.addChips(4*p.betSize)
+                    else:
+                        p.addChips(2*p.betSize)
+                #player push
+                elif (p.handTotal == self.gameDealer.handTotal):
+                    if p.didDouble:
+                        p.addChips(2*p.betSize)
+                    else:
+                        p.addChips(p.betSize)
+        return
     def printPlayerChipSizes(self):
         for p in self.gamePlayers:
             p.printChipSize()

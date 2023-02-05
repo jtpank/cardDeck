@@ -35,46 +35,10 @@ def main():
             #deal hand
             simGame.dealHand()
             #take turns
-            for p in simGame.gamePlayers:
-                decision = p.makeDecision(simGame.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
-                p.setPlayerDecision(decision)  
-                while(not p.bust and not p.didDouble and decision != "S"):
-                    if(decision == "H"):
-                        p.assignCard(simGame.dealCard())
-                        p.calculateHandTotal()
-                        decision = p.makeDecision(simGame.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
-                    elif decision == "D":
-                        p.assignCard(simGame.dealCard())
-                        p.calculateHandTotal()
-                        p.setDidDouble()
-                        p.reduceChips(p.betSize)
-            #dealer decision
-            simGame.gameDealer.calculateHandTotal()
-            dealerDecision = simGame.gameDealer.makeDecision()
-            while(not simGame.gameDealer.bust and dealerDecision != "S"):
-                if dealerDecision == "H":
-                    simGame.gameDealer.assignCard(simGame.dealCard())
-                    simGame.gameDealer.calculateHandTotal()
-                dealerDecision = simGame.gameDealer.makeDecision()
+            simGame.takeTurns()
             #calculate win/loss
-            for p in simGame.gamePlayers:
-                if not p.bust:
-                    #dealer bust
-                    if(simGame.gameDealer.bust):
-                        p.addChips(2*p.betSize)
-                    #player beat dealer
-                    elif ((p.handTotal > simGame.gameDealer.handTotal) and simGame.gameDealer.handTotal != 21):
-                        if p.didDouble:
-                            p.addChips(4*p.betSize)
-                        else:
-                            p.addChips(2*p.betSize)
-                    #player push
-                    elif (p.handTotal == simGame.gameDealer.handTotal):
-                        if p.didDouble:
-                            p.addChips(2*p.betSize)
-                        else:
-                            p.addChips(p.betSize)
-            #print final output
+            simGame.calculateWinLoss()
+        #print final output
         for x in range(numPlayers):
             totalPlayerArr[x].append(simGame.gamePlayers[x].chips)
         # print("Set number: " + str(s))
