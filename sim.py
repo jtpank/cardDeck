@@ -4,7 +4,7 @@ import player
 import math
 import random
 import strategy
-
+import hand
 playerHardDeal = strategy.playerHardDeal_book
 playerSoftDeal = strategy.playerSoftDeal_book
 playerPairDeal = strategy.playerPairDeal_book
@@ -21,7 +21,7 @@ def main():
     playerBetSizeHigh = [5,8]
     numDecks = 3
     numberTurns = 100
-    simulationSets = 100
+    simulationSets = 1
     simGame = game.Game(numPlayers, numDecks, playerChipSize)
     for s in range(simulationSets):
         simGame.resetPlayerChips()
@@ -36,17 +36,18 @@ def main():
             simGame.dealHand()
             #take turns
             simGame.takeTurns(playerSoftDeal,playerHardDeal, playerPairDeal)
+            for p in simGame.gamePlayers:
+                #after dealHand(), guaranteed to have p.hands[0] 
+                playerHand = p.hands[0]
+                print("Player: " + str(p.id) + ' ' + playerHand.returnHandString() + ' dec: ' + p.decision)
+            simGame.gameDealer.hand.calculateHandTotal()
+            print("Dealer: " + simGame.gameDealer.hand.returnHandString())
+            print()
             #calculate win/loss
-            simGame.calculateWinLoss()
+            # simGame.calculateWinLoss()
         #print final output
         for x in range(numPlayers):
             totalPlayerArr[x].append(simGame.gamePlayers[x].chips)
-        # print("Set number: " + str(s))
-        # simGame.printPlayerChipSizes()
-        # simGame.printPlayerHands()
-        # simGame.printDealerHand()
-        # simGame.printDeckSize()
-    print(random.randint(1,10))
     print()
     print("Number of sims: " + str(simulationSets) + " Number of hands per turn: " + str(numberTurns))
     for i in range(numPlayers):
@@ -56,17 +57,10 @@ def main():
                 numWins[i] += 1
         # + " gain: " + str(totalPlayerArr[i]) + 
         print("Player " + str(i) + " win %: " + str(math.floor((numWins[i]/simulationSets)*100)))
-    # p1 = player.Player(0, 100)
-    # for i in range(3):
-    #     p1.assignCard(1)
-    # p1.assignCard(9)
-    # p1.assignCard(10)
-    # p1.calculateHandTotal()
-    # p1.showHandInfo()
-    # for k in playerHardDeal.keys():
-    #     print(str(k) + "\t" + str(playerHardDeal[k]))
-    # for k in playerSoftDeal.keys():
-    #     print(str(k) + "\t" + str(playerSoftDeal[k]))
 
 if __name__ == "__main__":
     main()
+
+
+
+

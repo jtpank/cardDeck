@@ -1,5 +1,5 @@
 class Hand:
-    #a hand strictly consists of 2 cards
+    #a hand consists of n cards
     # a player can have Many hands in one turn (but starts with one)
     def __init__(self):
         self.hand = []
@@ -21,6 +21,8 @@ class Hand:
     def getCard(self):
         if len(self.hand) > 0:
             return self.hand[0]
+    def getHandSize(self):
+        return len(self.hand)
     #can set a betsize to a hand
     def setBetSize(self, value):
         self.betSize = value
@@ -42,6 +44,8 @@ class Hand:
                 self.handTotal = self.handTotal + self.numAces*1
         if self.handTotal > 21:
             self.bust = True
-    #can display the 2 card hand info
+    def returnHandString(self):
+        return str("Hand: " + ' '.join(str(card) for card in self.hand) + " aces: " + str(self.numAces) + " Total: " + str(self.handTotal))
+    #can display the card hand info
     def displayHandInfo(self):
         print("Hand: " + ' '.join(str(card) for card in self.hand) + " aces: " + str(self.numAces) + " Total: " + str(self.handTotal))

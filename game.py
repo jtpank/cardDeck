@@ -1,5 +1,6 @@
 import player
 import dealer
+import hand
 from random import randrange
 import random
 
@@ -16,11 +17,14 @@ class Game:
         for i in range(2):
             #assign first/second card to each player
             for p in self.gamePlayers:
-                p.assignCard(self.dealCard())
+                playerHand = hand.Hand()
+                playerHand = p.hands[0]
+                playerHand.assignCard(self.dealCard())
             #assign first/second card to dealer
-            self.gameDealer.assignCard(self.dealCard())
+            self.gameDealer.hand.assignCard(self.dealCard())
         for p in self.gamePlayers:
-            p.calculateHandTotal()
+            for h in p.hands:
+                h.calculateHandTotal()
     def resetBlackJackDeck(self):
         self.deck = []
         self.deckSize = 0
@@ -71,28 +75,28 @@ class Game:
         for p in self.gamePlayers:
             decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal, playerPairDeal)
             p.setPlayerDecision(decision)  
-            while(not p.bust and not p.didDouble and decision != "S"):
-                if(decision == "H"):
-                    #Player decides to HIT
-                    p.assignCard(self.dealCard())
-                    p.calculateHandTotal()
-                    decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal, playerPairDeal)
-                elif decision == "D":
-                    #player decides to double down
-                    p.assignCard(self.dealCard())
-                    p.calculateHandTotal()
-                    p.setDidDouble()
-                    p.reduceChips(p.betSize)
-                # elif decision == "SP":
-                #     #split decision tree
-        #next make dealer decision
-        self.gameDealer.calculateHandTotal()
-        dealerDecision = self.gameDealer.makeDecision()
-        while(not self.gameDealer.bust and dealerDecision != "S"):
-            if dealerDecision == "H":
-                self.gameDealer.assignCard(self.dealCard())
-                self.gameDealer.calculateHandTotal()
-            dealerDecision = self.gameDealer.makeDecision()
+        #     while(not p.bust and not p.didDouble and decision != "S"):
+        #         if(decision == "H"):
+        #             #Player decides to HIT
+        #             p.assignCard(self.dealCard())
+        #             p.calculateHandTotal()
+        #             decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal, playerPairDeal)
+        #         elif decision == "D":
+        #             #player decides to double down
+        #             p.assignCard(self.dealCard())
+        #             p.calculateHandTotal()
+        #             p.setDidDouble()
+        #             p.reduceChips(p.betSize)
+        #         # elif decision == "SP":
+        #         #     #split decision tree
+        # #next make dealer decision
+        # self.gameDealer.calculateHandTotal()
+        # dealerDecision = self.gameDealer.makeDecision()
+        # while(not self.gameDealer.bust and dealerDecision != "S"):
+        #     if dealerDecision == "H":
+        #         self.gameDealer.assignCard(self.dealCard())
+        #         self.gameDealer.calculateHandTotal()
+        #     dealerDecision = self.gameDealer.makeDecision()
         return
     def calculateWinLoss(self):
         for p in self.gamePlayers:

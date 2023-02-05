@@ -5,19 +5,24 @@ class Player:
         self.chips = chips
         self.chipMax = chips
         self.hands = [hand.Hand()]
+        self.splitHand = hand.Hand()
         self.didDouble = False
         self.firstDecision = True
         self.decision = "N"
-        self.numTimesSplit = [0]
+        self.numTimesSplit = 0
         self.allHandsAreComplete = False
+        self.betSize = 0
     def resetChipStack(self):
         self.chips = self.chipMax
     def newHand(self):
         self.hands = [hand.Hand()]
+        self.splitHand = hand.Hand()
         self.didDouble = [False]
         self.firstDecision = [True]
-        self.numTimesSplit = [0]
+        self.numTimesSplit = 0
         self.allHandsAreComplete = False
+    def setBetSize(self, value):
+        self.betSize = value
     def addChips(self, value):
         self.chips += value
     def reduceChips(self, value):
@@ -31,15 +36,14 @@ class Player:
             self.didDouble.append(True)
         else:
             self.didDouble[idx] = True
-    def splitHand(self, idx):
+    def splitAHand(self, idx):
         #hands[i] is a hand obj that has hand = [4,4]
         #and hands needs to become hands[i] = [4,newCard], hands[i+1] = [4, newCard]
-        card = self.hands[idx].getCard()
-        self.hands[idx].assignSplitHand(card)
+        return
         #TODO: must assign the next split hand to the next position NOT append
         # if you split, then split, you have to keep track of where that split occured
-        #self.hands.append(hand.Hand())
-        #self.hands[idx+1].assignSplitHand(card)
+        # can only have 1 split hadn at a time
+        return
     #Game Logic
     #make a decision for a single hand (2 cards)
     #returns a decision of:
@@ -55,51 +59,23 @@ class Player:
         idx = initialIndex - 2
         if self.firstDecision:
             self.firstDecision = False
-            if self.numAces > 0:
-                #use player softDeal
-                otherCard = (self.handTotal - 11)
-                if otherCard >= 8:
-                    return playerSoftDeal[8][idx]
-                elif otherCard == 7:
-                    return playerSoftDeal[7][idx]
-                elif otherCard == 6:
-                    return playerSoftDeal[6][idx]
-                elif otherCard == 4 or otherCard == 5:
-                    return playerSoftDeal[5][idx]
-                else:
-                    return playerSoftDeal[3][idx]
+            #if paired hand
+            if self.hands[0].hand[0] == self.hands[0].hand[1]:
+                card = self.hands[0].hand[0]
+                return playerPairDeal[card][idx]
             else:
-                if self.handTotal >= 17:
-                    return playerHardDeal[17][idx]
-                elif self.handTotal >= 13 and self.handTotal < 17:
-                    return playerHardDeal[16][idx]
-                elif self.handTotal == 12:
-                    return playerHardDeal[12][idx]
-                elif self.handTotal == 11:
-                    return playerHardDeal[11][idx]
-                elif self.handTotal == 10:
-                    return playerHardDeal[10][idx]
-                elif self.handTotal == 9:
-                    return playerHardDeal[9][idx]
+                tot = self.hands[0].handTotal
+                if self.hands[0].numAces > 0:
+                    #use player softDeal
+                    otherCard = (self.hands[0].handTotal - 11)
+                    return playerSoftDeal[otherCard][idx]
                 else:
-                    return playerHardDeal[8][idx]
+                    return playerHardDeal[tot][idx]
         else:
-            if self.handTotal >= 17:
-                return playerHardDeal[17][idx]
-            elif self.handTotal >= 13 and self.handTotal < 17:
-                return playerHardDeal[16][idx]
-            elif self.handTotal == 12:
-                return playerHardDeal[12][idx]
-            elif self.handTotal == 11:
-                return playerHardDeal[11][idx]
-            elif self.handTotal == 10:
-                return playerHardDeal[10][idx]
-            elif self.handTotal == 9:
-                return playerHardDeal[9][idx]
-            else:
-                return playerHardDeal[8][idx]
-
+            tot = self.hands[0].handTotal
+            return playerHardDeal[tot][idx]
         return -1
+
     def setPlayerDecision(self, decision):
         self.decision = decision
     #reset player decision for the current hand

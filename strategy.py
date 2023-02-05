@@ -31,20 +31,34 @@ standAll = ["S" for i in range(10)]
 hitAll = ["H" for i in range(10)]
 
 playerHardDeal_book = {
+    21: dealerUpCard_with17,
+    20: dealerUpCard_with17,
+    19: dealerUpCard_with17,
+    18: dealerUpCard_with17,
     17: dealerUpCard_with17,
     16: dealerUpCard_with13to16,
+    15: dealerUpCard_with13to16,
+    14: dealerUpCard_with13to16,
+    13: dealerUpCard_with13to16,
     12: dealerUpCard_with12,
     11: dealerUpCard_with11,
     10: dealerUpCard_with10,
     9: dealerUpCard_with9,
-    8: dealerUpCard_with5to8
+    8: dealerUpCard_with5to8,
+    7: dealerUpCard_with5to8,
+    6: dealerUpCard_with5to8,
+    5: dealerUpCard_with5to8,
 }
 playerSoftDeal_book = {
+    10: dealerUpCard_with8to10,
+    9: dealerUpCard_with8to10,
     8: dealerUpCard_with8to10,
     7: dealerUpCard_with7,
     6: dealerUpCard_with6,
     5: dealerUpCard_with4to5,
+    4: dealerUpCard_with4to5,
     3: dealerUpCard_with2to3,
+    2: dealerUpCard_with2to3
 }
 playerPairDeal_book = {
     1: pairA,
