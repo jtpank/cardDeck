@@ -5,10 +5,9 @@ class Player:
         self.chips = chips
         self.chipMax = chips
         self.hands = [hand.Hand()]
-        self.splitHand = hand.Hand()
         self.didDouble = False
         self.firstDecision = True
-        self.decision = []
+        self.decision = [[]]
         self.numTimesSplit = 0
         self.allHandsAreComplete = False
         self.betSize = 0
@@ -17,10 +16,9 @@ class Player:
         self.chips = self.chipMax
     def newHand(self):
         self.hands = [hand.Hand()]
-        self.splitHand = hand.Hand()
         self.didDouble = False
         self.firstDecision = True
-        self.decision = []
+        self.decision = [[]]
         self.numTimesSplit = 0
         self.allHandsAreComplete = False
         self.currentHandIndex = 0
@@ -30,8 +28,8 @@ class Player:
         self.chips += value
     def reduceChips(self, value):
         self.chips -= value
-    def showInfo(self):
-        print("Player " + str(self.id) + " Decision: " + str(self.decision) + " Chips: " + str(self.chips))
+    def showInfo(self, idx):
+        print("Player " + str(self.id) + " Decision: " + str(self.decision[idx]) + " Chips: " + str(self.chips))
     def printChipSize(self):
         print("Player " + str(self.id) + " Chip size: " + str(self.chips))
     def setDidDouble(self):
@@ -39,6 +37,12 @@ class Player:
     def setAllHandsAreComplete(self):
         self.allHandsAreComplete = True
     def splitCurrentHand(self, idx):
+        card = self.hands[idx].getCard()
+        self.hands[idx].assignSplitHand(card)
+        newHand = hand.Hand()
+        newHand.assignCard(card)
+        self.hands.insert(idx+1,newHand)
+        self.decision.insert(idx+1, ["P"])
         #hands[i] is a hand obj that has hand = [4,4]
         #and hands needs to become hands[i] = [4,newCard], hands[i+1] = [4, newCard]
         #TODO: must assign the next split hand to the next position NOT append
@@ -81,10 +85,10 @@ class Player:
             return "B"
 
 
-    def updateDecisionTree(self, decision):
-        self.decision.append(decision)
+    def updateDecisionTree(self, decision, idx):
+        self.decision[idx].append(decision)
     #reset player decision for the current hand
     def resetPlayerDecisions(self):
         self.didDouble = False
         self.firstDecision = True
-        self.decision = []
+        self.decision = [[]]

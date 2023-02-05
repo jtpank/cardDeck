@@ -12,6 +12,19 @@ class Game:
         self.numDecks = numDecks
         self.deck = []
         self.deckSize = 0
+    def dealHandPair(self, pairCard):
+        #deal 2 cards to each player and to the dealer from the deck
+        for i in range(2):
+            #assign first/second card to each player
+            for p in self.gamePlayers:
+                playerHand = hand.Hand()
+                playerHand = p.hands[0]
+                playerHand.assignCard(pairCard)
+            #assign first/second card to dealer
+            self.gameDealer.hand.assignCard(self.dealCard())
+        for p in self.gamePlayers:
+            for h in p.hands:
+                h.calculateHandTotal()
     def dealHand(self):
         #deal 2 cards to each player and to the dealer from the deck
         for i in range(2):
@@ -77,29 +90,39 @@ class Game:
             #each player takes their turn
             #make first player decision
             decision = p.makeDecision(0,visibleCard, playerSoftDeal, playerHardDeal, playerPairDeal)
-            p.updateDecisionTree(decision)
+            p.updateDecisionTree(decision, 0)
             #while all hands are NOT completed
+            idx = p.currentHandIndex
             while not p.allHandsAreComplete:
-                idx = p.currentHandIndex
-                while(not p.hands[idx].didHandBust() and not p.didDouble and decision != "S"):
-                    if(decision == "H"):
-                        #Player decides to HIT
-                        p.hands[idx].assignCard(self.dealCard())
-                        p.hands[idx].calculateHandTotal()
-                        decision = p.makeDecision(idx, visibleCard, playerSoftDeal, playerHardDeal, playerPairDeal)
-                        p.updateDecisionTree(decision)
-                    elif decision == "D":
-                        #player decides to double down
-                        p.hands[idx].assignCard(self.dealCard())
-                        p.hands[idx].calculateHandTotal()
-                        p.setDidDouble()
-                        p.reduceChips(p.betSize)
-                        p.setAllHandsAreComplete()
-                    elif decision == "P":
-                        p.splitCurrentHand(idx)
-                        p.hands[idx].setBust()
-                if idx+1 >= len(p.hands):
+                if idx+1 > len(p.hands):
                     p.setAllHandsAreComplete()
+                else:
+                    while(not p.hands[idx].didHandBust() and not p.didDouble and p.decision[idx][(len(p.decision[idx])-1)] != "S"):
+                        if len(p.hands[idx].hand) == 1:
+                            p.hands[idx].assignCard(self.dealCard())
+                            p.hands[idx].calculateHandTotal()
+                            decision = p.makeDecision(idx, visibleCard, playerSoftDeal, playerHardDeal, playerPairDeal)
+                            p.updateDecisionTree(decision, idx)
+                        else:
+                            if(decision == "H"):
+                                #Player decides to HIT
+                                p.hands[idx].assignCard(self.dealCard())
+                                p.hands[idx].calculateHandTotal()
+                                decision = p.makeDecision(idx, visibleCard, playerSoftDeal, playerHardDeal, playerPairDeal)
+                                p.updateDecisionTree(decision, idx)
+                            elif decision == "D":
+                                #player decides to double down
+                                p.hands[idx].assignCard(self.dealCard())
+                                p.hands[idx].calculateHandTotal()
+                                p.setDidDouble()
+                                p.reduceChips(p.betSize)
+                            elif decision == "P":
+                                p.splitCurrentHand(idx)
+                                p.hands[idx].assignCard(self.dealCard())
+                                p.hands[idx].calculateHandTotal()
+                                decision = p.makeDecision(idx, visibleCard, playerSoftDeal, playerHardDeal, playerPairDeal)
+                                p.updateDecisionTree(decision, idx)
+                idx += 1
         # #next make dealer decision
         # self.gameDealer.calculateHandTotal()
         # dealerDecision = self.gameDealer.makeDecision()

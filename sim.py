@@ -9,7 +9,7 @@ playerHardDeal = strategy.playerHardDeal_book
 playerSoftDeal = strategy.playerSoftDeal_book
 playerPairDeal = strategy.playerPairDeal_book
 def main():
-    numPlayers = 3
+    numPlayers = 1
     totalPlayerArr = []
     numWins = []
     for i in range(numPlayers):
@@ -38,8 +38,8 @@ def main():
             simGame.takeTurns(playerSoftDeal,playerHardDeal, playerPairDeal)
             for p in simGame.gamePlayers:
                 #after dealHand(), guaranteed to have p.hands[0] 
-                playerHand = p.hands[0]
-                print("Player: " + str(p.id) + ' ' + playerHand.returnHandString() + ' dec: ' + str(p.decision))
+                for i in range(len(p.hands)):
+                    print("Player: " + str(p.id) + ' ' + p.hands[i].returnHandString() + ' decisions: ' + str(p.decision[i]))
             simGame.gameDealer.hand.calculateHandTotal()
             print("Dealer: " + simGame.gameDealer.hand.returnHandString())
             print()

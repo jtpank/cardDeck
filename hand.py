@@ -15,7 +15,7 @@ class Hand:
     #can assign a hand
     def assignSplitHand(self, card):
         if card == 1:
-            self.numAces += 1
+            self.numAces = 1
         self.hand = [card]
     #can get card for split
     def getCard(self):
