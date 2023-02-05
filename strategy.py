@@ -15,6 +15,18 @@ dealerUpCard_with6 = ["H"] + ["D" for i in range(4)] + ["H" for i in range(5)]
 dealerUpCard_with4to5 = ["H" for i in range(2)] + ["D" for i in range(3)] + ["H" for i in range(5)]
 dealerUpCard_with2to3 = ["H" for i in range(3)] + ["D" for i in range(2)] + ["H" for i in range(5)]
 
+#pair hands
+pairA   = ["SP" for i in range(10)]
+pair2   = ["SP" for i in range(6)] + ["H" for i in range(4)] 
+pair3   = ["SP" for i in range(6)] + ["H" for i in range(4)] 
+pair4   = ["H" for i in range(3)] + ["SP" for i in range(2)] + ["H" for i in range(5)]
+pair5   = ["D" for i in range(8)] + ["H" for i in range(2)]
+pair6   = ["SP" for i in range(5)] + ["H" for i in range(5)]
+pair7   = ["SP" for i in range(6)] + ["H" for i in range(4)]
+pair8   = ["SP" for i in range(10)]
+pair9   = ["SP" for i in range(5)] + ["S"] + ["SP" for i in range(2)] + ["S" for i in range(2)]
+pair10  = ["S" for i in range(10)]
+
 standAll = ["S" for i in range(10)]
 hitAll = ["H" for i in range(10)]
 
