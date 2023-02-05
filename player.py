@@ -1,9 +1,10 @@
+import hand
 class Player:
     def __init__(self, id, chips):
         self.id = id
         self.chips = chips
         self.chipMax = chips
-        self.hands = []
+        self.hands = [hand.Hand()]
         self.didDouble = False
         self.firstDecision = True
         self.decision = "N"
@@ -12,7 +13,7 @@ class Player:
     def resetChipStack(self):
         self.chips = self.chipMax
     def newHand(self):
-        self.hands = []
+        self.hands = [hand.Hand()]
         self.didDouble = [False]
         self.firstDecision = [True]
         self.numTimesSplit = [0]
@@ -30,10 +31,15 @@ class Player:
             self.didDouble.append(True)
         else:
             self.didDouble[idx] = True
-    def splitHand(self, currentHand):
+    def splitHand(self, idx):
         #hands[i] is a hand obj that has hand = [4,4]
         #and hands needs to become hands[i] = [4,newCard], hands[i+1] = [4, newCard]
-        # 
+        card = self.hands[idx].getCard()
+        self.hands[idx].assignSplitHand(card)
+        #TODO: must assign the next split hand to the next position NOT append
+        # if you split, then split, you have to keep track of where that split occured
+        #self.hands.append(hand.Hand())
+        #self.hands[idx+1].assignSplitHand(card)
     #Game Logic
     #make a decision for a single hand (2 cards)
     #returns a decision of:

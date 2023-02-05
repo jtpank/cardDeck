@@ -12,6 +12,15 @@ class Hand:
         self.hand.append(card)
         if card == 1:
             self.numAces += 1
+    #can assign a hand
+    def assignSplitHand(self, card):
+        if card == 1:
+            self.numAces += 1
+        self.hand = [card]
+    #can get card for split
+    def getCard(self):
+        if len(self.hand) > 0:
+            return self.hand[0]
     #can set a betsize to a hand
     def setBetSize(self, value):
         self.betSize = value
