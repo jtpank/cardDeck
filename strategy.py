@@ -15,7 +15,7 @@ dealerUpCard_with6 = ["H"] + ["D" for i in range(4)] + ["H" for i in range(5)]
 dealerUpCard_with4to5 = ["H" for i in range(2)] + ["D" for i in range(3)] + ["H" for i in range(5)]
 dealerUpCard_with2to3 = ["H" for i in range(3)] + ["D" for i in range(2)] + ["H" for i in range(5)]
 
-#pair hands
+#basic strat with pair hands
 pairA   = ["SP" for i in range(10)]
 pair2   = ["SP" for i in range(6)] + ["H" for i in range(4)] 
 pair3   = ["SP" for i in range(6)] + ["H" for i in range(4)] 
@@ -46,6 +46,19 @@ playerSoftDeal_book = {
     5: dealerUpCard_with4to5,
     3: dealerUpCard_with2to3,
 }
+playerPairDeal_book = {
+    1: pairA,
+    2: pair2,
+    3: pair3,
+    4: pair4,
+    5: pair5,
+    6: pair6,
+    7: pair7,
+    8: pair8,
+    9: pair9,
+    10: pair10
+}
+
 playerHardDeal_custom = {
     17: standAll,
     16: standAll,

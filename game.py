@@ -66,23 +66,25 @@ class Game:
                 betSize = playerBetSizeHigh[randrange(len(playerBetSizeHigh))]
             p.setBetSize(betSize)
             p.reduceChips(p.betSize)
-    def takeTurns(self, playerSoftDeal, playerHardDeal):
+    def takeTurns(self, playerSoftDeal, playerHardDeal, playerPairDeal):
         #make player decisions
         for p in self.gamePlayers:
-            decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
+            decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal, playerPairDeal)
             p.setPlayerDecision(decision)  
             while(not p.bust and not p.didDouble and decision != "S"):
                 if(decision == "H"):
                     #Player decides to HIT
                     p.assignCard(self.dealCard())
                     p.calculateHandTotal()
-                    decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal)
+                    decision = p.makeDecision(self.gameDealer.showVisibleCard(), playerSoftDeal, playerHardDeal, playerPairDeal)
                 elif decision == "D":
                     #player decides to double down
                     p.assignCard(self.dealCard())
                     p.calculateHandTotal()
                     p.setDidDouble()
                     p.reduceChips(p.betSize)
+                # elif decision == "SP":
+                #     #split decision tree
         #next make dealer decision
         self.gameDealer.calculateHandTotal()
         dealerDecision = self.gameDealer.makeDecision()

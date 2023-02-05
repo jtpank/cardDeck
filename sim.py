@@ -7,7 +7,7 @@ import strategy
 
 playerHardDeal = strategy.playerHardDeal_book
 playerSoftDeal = strategy.playerSoftDeal_book
-
+playerPairDeal = strategy.playerPairDeal_book
 def main():
     numPlayers = 3
     totalPlayerArr = []
@@ -35,7 +35,7 @@ def main():
             #deal hand
             simGame.dealHand()
             #take turns
-            simGame.takeTurns(playerSoftDeal,playerHardDeal)
+            simGame.takeTurns(playerSoftDeal,playerHardDeal, playerPairDeal)
             #calculate win/loss
             simGame.calculateWinLoss()
         #print final output
