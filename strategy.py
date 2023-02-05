@@ -74,19 +74,33 @@ playerPairDeal_book = {
 }
 
 playerHardDeal_custom = {
+    21: standAll,
+    20: standAll,
+    19: standAll,
+    18: standAll,
     17: standAll,
     16: standAll,
+    15: hitAll,
+    14: hitAll,
+    13: hitAll,
     12: hitAll,
     11: hitAll,
     10: hitAll,
-    9: hitAll,
-    8: hitAll
+    9:  hitAll,
+    8:  hitAll,
+    7:  hitAll,
+    6:  hitAll,
+    5:  hitAll,
 }
 playerSoftDeal_custom = {
-    8: standAll,
-    7: standAll,
-    6: standAll,
-    5: hitAll,
-    3: hitAll,
+    10: standAll,
+    9:  standAll,
+    8:  standAll,
+    7:  standAll,
+    6:  standAll,
+    5:  hitAll,
+    4:  hitAll,
+    3:  hitAll,
+    2:  hitAll
 }
 

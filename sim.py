@@ -9,7 +9,7 @@ playerHardDeal = strategy.playerHardDeal_book
 playerSoftDeal = strategy.playerSoftDeal_book
 playerPairDeal = strategy.playerPairDeal_book
 def main():
-    numPlayers = 3
+    numPlayers = 6
     totalPlayerArr = []
     numWins = []
     for i in range(numPlayers):
@@ -17,11 +17,11 @@ def main():
         numWins.append(0)
     playerChipSize = 100
     percentLow = 8
-    playerBetSizeLow = [1,2]
-    playerBetSizeHigh = [5,8]
+    playerBetSizeLow = [1]
+    playerBetSizeHigh = [4,4,5,5,25]
     numDecks = 3
     numberTurns = 10
-    simulationSets = 5
+    simulationSets = 20
     simGame = game.Game(numPlayers, numDecks, playerChipSize)
     # NOTE: TODO: Players are allowed to double after split
     # NOTE: TODO: Players are allowed to split Aces AGAIN!
