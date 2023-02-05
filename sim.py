@@ -80,6 +80,7 @@ def main():
     simulationSets = 100
     simGame = game.Game(numPlayers, numDecks, playerChipSize)
     for s in range(simulationSets):
+        #reset player chips per simulation round
         for p in simGame.gamePlayers:
             p.resetChipStack()
         for i in range(numberTurns):
