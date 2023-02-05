@@ -97,7 +97,7 @@ class Game:
                 if idx+1 > len(p.hands):
                     p.setAllHandsAreComplete()
                 else:
-                    while(not p.hands[idx].didHandBust() and not p.didDouble and p.decision[idx][(len(p.decision[idx])-1)] != "S"):
+                    while(not p.hands[idx].didHandBust() and not p.hands[idx].didDouble and p.decision[idx][(len(p.decision[idx])-1)] != "S"):
                         if len(p.hands[idx].hand) == 1:
                             p.hands[idx].assignCard(self.dealCard())
                             p.hands[idx].calculateHandTotal()
@@ -114,7 +114,7 @@ class Game:
                                 #player decides to double down
                                 p.hands[idx].assignCard(self.dealCard())
                                 p.hands[idx].calculateHandTotal()
-                                p.setDidDouble()
+                                p.hands[idx].setDidDouble()
                                 p.reduceChips(p.betSize)
                             elif decision == "P":
                                 p.splitCurrentHand(idx)
@@ -124,32 +124,33 @@ class Game:
                                 p.updateDecisionTree(decision, idx)
                 idx += 1
         # #next make dealer decision
-        # self.gameDealer.calculateHandTotal()
-        # dealerDecision = self.gameDealer.makeDecision()
-        # while(not self.gameDealer.bust and dealerDecision != "S"):
-        #     if dealerDecision == "H":
-        #         self.gameDealer.assignCard(self.dealCard())
-        #         self.gameDealer.calculateHandTotal()
-        #     dealerDecision = self.gameDealer.makeDecision()
+        self.gameDealer.hand.calculateHandTotal()
+        dealerDecision = self.gameDealer.makeDecision()
+        while(not self.gameDealer.bust and dealerDecision != "S"):
+            if dealerDecision == "H":
+                self.gameDealer.hand.assignCard(self.dealCard())
+                self.gameDealer.hand.calculateHandTotal()
+            dealerDecision = self.gameDealer.makeDecision()
         return
     def calculateWinLoss(self):
         for p in self.gamePlayers:
-            if not p.bust:
-                #dealer bust
-                if(self.gameDealer.bust):
-                    p.addChips(2*p.betSize)
-                #player beat dealer
-                elif ((p.handTotal > self.gameDealer.handTotal) and self.gameDealer.handTotal != 21):
-                    if p.didDouble:
-                        p.addChips(4*p.betSize)
-                    else:
+            for hand in p.hands:
+                if not hand.bust:
+                    #dealer bust
+                    if(self.gameDealer.hand.bust):
                         p.addChips(2*p.betSize)
-                #player push
-                elif (p.handTotal == self.gameDealer.handTotal):
-                    if p.didDouble:
-                        p.addChips(2*p.betSize)
-                    else:
-                        p.addChips(p.betSize)
+                    #player beat dealer
+                    elif ((hand.handTotal > self.gameDealer.hand.handTotal) and self.gameDealer.hand.handTotal != 21):
+                        if hand.didDouble:
+                            p.addChips(4*p.betSize)
+                        else:
+                            p.addChips(2*p.betSize)
+                    #player push
+                    elif (hand.handTotal == self.gameDealer.hand.handTotal):
+                        if hand.didDouble:
+                            p.addChips(2*p.betSize)
+                        else:
+                            p.addChips(p.betSize)
         return
     def printPlayerChipSizes(self):
         for p in self.gamePlayers:

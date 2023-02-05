@@ -7,6 +7,7 @@ class Hand:
         self.handTotal = 0
         self.bust = False
         self.betSize = 0
+        self.didDouble = False
     #can assign a card to a hand
     def assignCard(self, card):
         self.hand.append(card)
@@ -48,6 +49,8 @@ class Hand:
         return self.bust
     def setBust(self):
         self.bust = True
+    def setDidDouble(self):
+        self.didDouble = True
     def returnHandString(self):
         return str("Hand: " + ' '.join(str(card) for card in self.hand) + " aces: " + str(self.numAces) + " Total: " + str(self.handTotal))
     #can display the card hand info

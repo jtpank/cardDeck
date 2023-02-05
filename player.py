@@ -5,7 +5,6 @@ class Player:
         self.chips = chips
         self.chipMax = chips
         self.hands = [hand.Hand()]
-        self.didDouble = False
         self.firstDecision = True
         self.decision = [[]]
         self.numTimesSplit = 0
@@ -16,7 +15,6 @@ class Player:
         self.chips = self.chipMax
     def newHand(self):
         self.hands = [hand.Hand()]
-        self.didDouble = False
         self.firstDecision = True
         self.decision = [[]]
         self.numTimesSplit = 0
@@ -32,8 +30,7 @@ class Player:
         print("Player " + str(self.id) + " Decision: " + str(self.decision[idx]) + " Chips: " + str(self.chips))
     def printChipSize(self):
         print("Player " + str(self.id) + " Chip size: " + str(self.chips))
-    def setDidDouble(self):
-        self.didDouble = True
+
     def setAllHandsAreComplete(self):
         self.allHandsAreComplete = True
     def splitCurrentHand(self, idx):
@@ -79,6 +76,9 @@ class Player:
                     else:
                         return playerHardDeal[tot][idx]
             else:
+                if self.hands[playerHandIdx].hand[0] == self.hands[playerHandIdx].hand[1]:
+                    card = self.hands[playerHandIdx].hand[0]
+                    return playerPairDeal[card][idx]
                 tot = self.hands[playerHandIdx].handTotal
                 return playerHardDeal[tot][idx]
         else:
@@ -89,6 +89,5 @@ class Player:
         self.decision[idx].append(decision)
     #reset player decision for the current hand
     def resetPlayerDecisions(self):
-        self.didDouble = False
         self.firstDecision = True
         self.decision = [[]]
