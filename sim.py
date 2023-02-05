@@ -39,7 +39,7 @@ def main():
             for p in simGame.gamePlayers:
                 #after dealHand(), guaranteed to have p.hands[0] 
                 playerHand = p.hands[0]
-                print("Player: " + str(p.id) + ' ' + playerHand.returnHandString() + ' dec: ' + p.decision)
+                print("Player: " + str(p.id) + ' ' + playerHand.returnHandString() + ' dec: ' + str(p.decision))
             simGame.gameDealer.hand.calculateHandTotal()
             print("Dealer: " + simGame.gameDealer.hand.returnHandString())
             print()

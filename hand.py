@@ -44,6 +44,10 @@ class Hand:
                 self.handTotal = self.handTotal + self.numAces*1
         if self.handTotal > 21:
             self.bust = True
+    def didHandBust(self):
+        return self.bust
+    def setBust(self):
+        self.bust = True
     def returnHandString(self):
         return str("Hand: " + ' '.join(str(card) for card in self.hand) + " aces: " + str(self.numAces) + " Total: " + str(self.handTotal))
     #can display the card hand info
