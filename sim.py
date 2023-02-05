@@ -35,7 +35,7 @@ def main():
             #deal hand
             simGame.dealHand()
             #take turns
-            simGame.takeTurns()
+            simGame.takeTurns(playerSoftDeal,playerHardDeal)
             #calculate win/loss
             simGame.calculateWinLoss()
         #print final output
